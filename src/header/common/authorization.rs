@@ -26,7 +26,7 @@ impl<S: Scheme> Header for Authorization<S> {
 
     fn parse_header(raw: &[Vec<u8>]) -> Option<Authorization<S>> {
         if raw.len() == 1 {
-            match (from_utf8(unsafe { raw[].unsafe_get(0)[] }), Scheme::scheme(None::<S>)) {
+            match (from_utf8(unsafe { raw[].get_unchecked(0)[] }), Scheme::scheme(None::<S>)) {
                 (Ok(header), Some(scheme))
                     if header.starts_with(scheme) && header.len() > scheme.len() + 1 => {
                     header[scheme.len() + 1..].parse::<S>().map(|s| Authorization(s))
@@ -193,4 +193,3 @@ mod tests {
 
 bench_header!(raw, Authorization<String>, { vec![b"foo bar baz".to_vec()] });
 bench_header!(basic, Authorization<Basic>, { vec![b"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==".to_vec()] });
-
